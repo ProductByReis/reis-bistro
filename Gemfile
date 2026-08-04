@@ -12,7 +12,7 @@ gem "solid_cache", "1.0.10"
 gem "solid_queue", "1.6.0"
 
 # Use Ruby default gems already present (avoid MSYS2 native rebuilds)
-gem "bigdecimal", "3.1.8"
+gem "bigdecimal", "4.1.2"
 gem "json", "2.9.1"
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
