@@ -1,0 +1,63 @@
+<% total = valor_total(pessoas: @pessoas, harmonizacoes: @harmonizacoes) %>
+<% com_barra_mobile = local_assigns.fetch(:com_barra_mobile, true) %>
+
+<aside class="border border-latao/25 p-6 xl:sticky xl:top-[120px]" aria-labelledby="resumo-titulo">
+  <p class="rotulo" id="resumo-titulo">Sua reserva</p>
+
+  <dl class="mt-6 space-y-4 text-legenda">
+    <div class="flex justify-between gap-4">
+      <dt class="text-cinza-texto">Data</dt>
+      <dd class="text-right first-letter:uppercase"><%= @data ? data_por_extenso(@data) : "—" %></dd>
+    </div>
+
+    <div class="flex justify-between gap-4">
+      <dt class="text-cinza-texto">Horário</dt>
+      <dd class="text-right"><%= @turno || "—" %></dd>
+    </div>
+
+    <div class="flex justify-between gap-4">
+      <dt class="text-cinza-texto">Pessoas</dt>
+      <dd class="text-right"><%= @pessoas.positive? ? pluralize(@pessoas, "pessoa") : "—" %></dd>
+    </div>
+
+    <div class="flex justify-between gap-4">
+      <dt class="text-cinza-texto">Menu degustação</dt>
+      <dd class="text-right">
+        <%= @pessoas.positive? ? "#{@pessoas} × #{em_reais(Reservation::PRECO_MENU)}" : "—" %>
+      </dd>
+    </div>
+
+    <div class="flex justify-between gap-4">
+      <dt class="text-cinza-texto">Harmonização</dt>
+      <dd class="text-right">
+        <%= @harmonizacoes.positive? ? "#{@harmonizacoes} × #{em_reais(Reservation::PRECO_HARMONIZACAO)}" : "—" %>
+      </dd>
+    </div>
+  </dl>
+
+  <hr class="filete my-6">
+
+  <div class="flex items-baseline justify-between gap-4">
+    <span class="rotulo">Total</span>
+    <span class="font-display text-[1.75rem]"><%= total.positive? ? em_reais(total) : "—" %></span>
+  </div>
+
+  <p class="mt-6 text-[12px] text-cinza-texto">
+    Serviço não incluso. O pagamento é feito no restaurante.
+  </p>
+</aside>
+
+<% if com_barra_mobile %>
+  <div class="fixed inset-x-0 bottom-0 z-40 border-t border-latao/25 bg-carvao-claro xl:hidden">
+    <div class="wrap max-w-[1120px] flex h-[72px] items-center justify-between gap-4">
+      <p class="text-legenda text-cinza-texto">
+        <%= @data ? "#{@data.day}/#{@data.month}" : "—" %>
+        <span aria-hidden="true">·</span>
+        <%= @turno || "—" %>
+        <span aria-hidden="true">·</span>
+        <%= @pessoas.positive? ? "#{@pessoas}p" : "—" %>
+      </p>
+      <p class="font-display text-xl"><%= total.positive? ? em_reais(total) : "—" %></p>
+    </div>
+  </div>
+<% end %>

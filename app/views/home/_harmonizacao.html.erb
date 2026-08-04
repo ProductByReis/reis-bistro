@@ -1,0 +1,33 @@
+<section class="xl:grid xl:grid-cols-5 xl:items-center" aria-labelledby="harmonizacao-titulo">
+  <div class="order-2 py-secao xl:py-secao-lg px-6 xl:pl-20 xl:pr-14 xl:col-span-2 xl:order-1 revelar" data-controller="revelar">
+    <p class="rotulo">A cervejaria</p>
+    <h2 id="harmonizacao-titulo" class="mt-6 font-display text-h2">Reis Beer</h2>
+
+    <p class="mt-8 text-corpo text-creme/80">
+      A cervejaria ocupa o fundo da casa e existe por um motivo só: alimentar o fermento da
+      massa e acompanhar cada etapa do menu. Cinco rótulos, produzidos aqui, servidos apenas aqui.
+    </p>
+
+    <ul class="mt-10 space-y-5">
+      <% rotulos_reis_beer.each do |rotulo| %>
+        <li class="border-t border-latao/25 pt-4">
+          <p class="font-display text-xl"><%= rotulo[:nome] %></p>
+          <p class="mt-1 text-legenda text-cinza-texto"><%= rotulo[:detalhe] %></p>
+        </li>
+      <% end %>
+    </ul>
+
+    <p class="rotulo mt-10">Harmonização completa — R$ 180 por pessoa</p>
+
+    <div class="mt-8">
+      <%= link_to "Reservar com harmonização", reservas_path, class: "botao botao--secundario" %>
+    </div>
+  </div>
+
+  <div class="order-1 aspect-[4/5] bg-carvao-claro xl:h-full xl:col-span-3 xl:order-2">
+    <%= image_tag "cervejaria.webp",
+          alt: "Copo de cerveja âmbar em contraluz diante dos tanques da cervejaria",
+          loading: "lazy",
+          class: "size-full object-cover" %>
+  </div>
+</section>

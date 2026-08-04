@@ -1,0 +1,43 @@
+<section id="casa" class="scroll-mt-24 wrap py-secao xl:py-secao-lg" aria-labelledby="casa-titulo">
+  <div class="revelar" data-controller="revelar">
+    <p class="rotulo">A casa</p>
+    <h2 id="casa-titulo" class="mt-6 font-display text-h2">Doze mesas, cozinha aberta.</h2>
+    <p class="mt-6 text-corpo text-creme/70 max-w-leitura">
+      Uma casa de 1948 no Castanho, com o forno no centro da sala.
+    </p>
+  </div>
+
+  <div class="mt-12 -mx-6 flex snap-x snap-mandatory gap-2 overflow-x-auto px-6 xl:mx-0 xl:grid xl:grid-cols-12 xl:gap-2 xl:overflow-visible xl:px-0">
+    <div class="w-[85vw] shrink-0 snap-center aspect-[3/4] bg-carvao-claro xl:w-auto xl:shrink xl:col-span-8 xl:aspect-auto xl:h-[720px]">
+      <%= image_tag "casa-principal.webp",
+            alt: "Salão do restaurante à noite, mesas postas e forno a lenha aceso ao fundo",
+            loading: "lazy",
+            class: "size-full object-cover" %>
+    </div>
+
+    <div class="flex shrink-0 gap-2 xl:col-span-4 xl:flex-col xl:shrink">
+      <div class="w-[85vw] shrink-0 snap-center aspect-[3/4] bg-carvao-claro xl:w-auto xl:shrink xl:aspect-auto xl:h-[238px]">
+        <%= image_tag "casa-mesa.webp",
+              alt: "Mesa posta com louça escura, taça de cerveja e cutelaria de latão",
+              loading: "lazy",
+              class: "size-full object-cover" %>
+      </div>
+
+      <div class="w-[85vw] shrink-0 snap-center aspect-[3/4] bg-carvao-claro xl:w-auto xl:shrink xl:aspect-auto xl:h-[238px]">
+        <%= image_tag "casa-servico.webp",
+              alt: "Garçom de costas servindo um prato em mesa de restaurante",
+              loading: "lazy",
+              class: "size-full object-cover" %>
+      </div>
+
+      <div class="w-[85vw] shrink-0 snap-center aspect-[3/4] bg-carvao-claro xl:w-auto xl:shrink xl:aspect-auto xl:h-[238px]">
+        <%= image_tag "casa-fachada.webp",
+              alt: "Fachada da casa à noite, com luz quente saindo pela porta aberta",
+              loading: "lazy",
+              class: "size-full object-cover" %>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-4 text-[12px] text-cinza-texto">Imagens ilustrativas.</p>
+</section>

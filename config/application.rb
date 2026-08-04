@@ -31,7 +31,10 @@ module ReisBistro
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    # A casa é em Jundiaí. O banco guarda em UTC; a aplicação raciocina em BRT,
+    # o que importa para o corte de antecedência das reservas.
+    config.time_zone = "America/Sao_Paulo"
+
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end

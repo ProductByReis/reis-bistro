@@ -1,0 +1,33 @@
+<footer class="border-t border-latao/25 bg-carvao">
+  <div class="wrap py-16 xl:grid xl:grid-cols-12 xl:gap-12">
+    <div class="xl:col-span-5">
+      <p class="font-display text-2xl">Reis Bistrô</p>
+      <p class="mt-4 text-legenda text-cinza-texto max-w-xs">
+        Pizza de autor e cerveja da casa. Jundiaí, São Paulo.
+      </p>
+    </div>
+
+    <nav class="mt-10 xl:mt-0 xl:col-span-3" aria-label="Navegação do rodapé">
+      <ul class="space-y-3 text-legenda">
+        <% navegacao_principal.each do |item| %>
+          <li><a href="<%= item[:ancora] %>" class="text-cinza-texto hover:text-creme transition-colors"><%= item[:rotulo] %></a></li>
+        <% end %>
+        <li><%= link_to "Reservar", reservas_path, class: "text-latao hover:text-creme transition-colors" %></li>
+      </ul>
+    </nav>
+
+    <div class="mt-10 xl:mt-0 xl:col-span-4">
+      <ul class="space-y-3 text-legenda text-cinza-texto">
+        <li><a href="tel:+<%= ReservationsHelper::TELEFONE_E164 %>" class="hover:text-creme transition-colors"><%= ReservationsHelper::TELEFONE %></a></li>
+        <li><a href="mailto:<%= ReservationsHelper::EMAIL %>" class="hover:text-creme transition-colors"><%= ReservationsHelper::EMAIL %></a></li>
+        <li><a href="https://instagram.com/<%= ReservationsHelper::INSTAGRAM %>" target="_blank" rel="noopener" class="hover:text-creme transition-colors">@<%= ReservationsHelper::INSTAGRAM %></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap border-t border-latao/25 py-8">
+    <p class="text-[12px] text-cinza-texto">
+      © <%= Date.current.year %> Reis Bistrô. Todos os direitos reservados. Imagens ilustrativas.
+    </p>
+  </div>
+</footer>

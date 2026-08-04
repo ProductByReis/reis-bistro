@@ -7,4 +7,8 @@ if ENV["USE_BUNDLER"] == "1"
   require "bundler/setup"
 else
   ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
+
+  # Sem `bundler/setup`, a stdlib que o Bundler carregaria de brinde não vem.
+  # `rails test` depende de Pathname.
+  require "pathname"
 end

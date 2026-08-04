@@ -1,0 +1,90 @@
+<% escolheu_sim = params[:harmonizacao] == "sim" %>
+<% escolheu_nao = params[:harmonizacao] == "nao" %>
+<% mesa_compartilhada = @pessoas > 1 %>
+
+<%= render "reservations/navbar_reduzida" %>
+
+<main id="conteudo" class="wrap max-w-[1120px] pb-32 pt-12 xl:pb-24 xl:pt-16">
+  <%= render "reservations/progresso", atual_passo: 2 %>
+
+  <h1 class="mt-8 font-display text-h2">Vai de Reis Beer?</h1>
+  <p class="mt-4 max-w-[60ch] text-corpo text-cinza-texto">
+    Os cinco rótulos são produzidos na casa e acompanham as seis etapas do menu.
+    <%= em_reais(Reservation::PRECO_HARMONIZACAO) %> por pessoa.
+  </p>
+
+  <div class="mt-12 grid gap-12 xl:grid-cols-[7fr_4fr] xl:gap-16">
+    <form action="<%= reservas_dados_path %>" method="get" class="space-y-6">
+      <input type="hidden" name="data" value="<%= @data %>">
+      <input type="hidden" name="turno" value="<%= @turno %>">
+      <input type="hidden" name="pessoas" value="<%= @pessoas %>">
+
+      <fieldset>
+        <legend class="sr-only">Harmonização Reis Beer</legend>
+
+        <div class="escolha escolha--upsell relative">
+          <span class="absolute right-5 top-5 text-[11px] uppercase tracking-[0.14em] text-latao">Recomendado</span>
+
+          <label class="block cursor-pointer pr-32">
+            <input type="radio" name="harmonizacao" value="sim" class="sr-only" required
+                   <%= "checked" if escolheu_sim %>>
+            <span class="block font-display text-[1.75rem]">Com harmonização</span>
+            <span class="mt-2 block text-legenda text-cinza-texto">
+              Cinco taças de 150 ml ao longo do menu.
+            </span>
+          </label>
+
+          <ol class="mt-6 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+            <% rotulos_reis_beer.each do |rotulo| %>
+              <li>
+                <span class="block text-corpo"><%= rotulo[:nome] %></span>
+                <span class="block text-legenda text-cinza-texto"><%= rotulo[:detalhe] %></span>
+              </li>
+            <% end %>
+          </ol>
+
+          <% if mesa_compartilhada %>
+            <fieldset class="mt-8 border-t border-latao/20 pt-6">
+              <legend class="rotulo">Para quantas pessoas?</legend>
+              <p class="mt-2 text-legenda text-cinza-texto">
+                Útil quando alguém da mesa não bebe.
+              </p>
+
+              <div class="mt-4 flex flex-wrap gap-3">
+                <% 1.upto(@pessoas) do |quantidade| %>
+                  <label class="escolha escolha--numero min-w-[80px] text-center">
+                    <input type="radio" name="harmonizacoes" value="<%= quantidade %>" class="sr-only"
+                           <%= "checked" if quantidade == (escolheu_sim ? @harmonizacoes : @pessoas) %>>
+                    <span class="block font-display text-[1.375rem]"><%= quantidade %></span>
+                    <span class="escolha__nota mt-1 block text-[12px] text-cinza-texto">
+                      <%= em_reais(quantidade * Reservation::PRECO_HARMONIZACAO) %>
+                    </span>
+                  </label>
+                <% end %>
+              </div>
+            </fieldset>
+          <% end %>
+        </div>
+
+        <label class="escolha mt-4 block">
+          <input type="radio" name="harmonizacao" value="nao" class="sr-only" required
+                 <%= "checked" if escolheu_nao %>>
+          <span class="block font-display text-[1.75rem]">Sem harmonização</span>
+          <span class="mt-2 block text-legenda text-cinza-texto">
+            Água, café e sucos seguem disponíveis à parte.
+          </span>
+        </label>
+      </fieldset>
+
+      <div class="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-end">
+        <%= link_to "← Voltar", reservas_path(data: @data, turno: @turno, pessoas: @pessoas.positive? ? @pessoas : nil),
+              class: "botao botao--secundario w-full text-center sm:w-auto" %>
+        <button type="submit" class="botao botao--primario botao--travado w-full sm:w-auto">Continuar</button>
+      </div>
+    </form>
+
+    <%= render "reservations/resumo" %>
+  </div>
+</main>
+
+<%= render "reservations/rodape_minimo" %>

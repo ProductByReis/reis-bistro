@@ -1,0 +1,112 @@
+<%= render "reservations/navbar_reduzida" %>
+
+<main id="conteudo" class="wrap max-w-[1120px] pb-24 pt-12 xl:pt-16">
+  <%= render "reservations/progresso", atual_passo: 3 %>
+
+  <h1 class="mt-8 font-display text-h2">Só faltam seus dados</h1>
+
+  <%# No mobile a barra fixa do rodapé fica coberta pelo teclado, então o resumo
+      é repetido aqui em uma linha compacta. %>
+  <p class="mt-6 border-y border-latao/20 py-3 text-legenda text-cinza-texto xl:hidden">
+    <span class="first-letter:uppercase"><%= @data ? data_por_extenso(@data) : "—" %></span>
+    · <%= @turno || "—" %>
+    · <%= @pessoas.positive? ? pluralize(@pessoas, "pessoa") : "—" %>
+    · <span class="text-creme"><%= em_reais(valor_total(pessoas: @pessoas, harmonizacoes: @harmonizacoes)) %></span>
+  </p>
+
+  <% if @reserva.errors.any? %>
+    <div class="faixa-erro mt-8 flex gap-3" role="alert">
+      <span aria-hidden="true">⚠</span>
+      <div>
+        <p>Não conseguimos confirmar sua reserva. Nada foi cobrado e nenhuma mesa foi reservada.</p>
+        <p class="mt-2">
+          Revise os campos marcados ou fale pelo
+          <a href="<%= ReservationsHelper::WHATSAPP %>" target="_blank" rel="noopener" class="underline underline-offset-4">WhatsApp</a>.
+        </p>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mt-12 grid gap-12 xl:grid-cols-[7fr_4fr] xl:gap-16">
+    <%= form_with model: @reserva, url: reservas_path, method: :post,
+                  class: "max-w-[560px] space-y-8" do |form| %>
+      <%= form.hidden_field :data %>
+      <%= form.hidden_field :turno %>
+      <%= form.hidden_field :pessoas %>
+      <%= form.hidden_field :harmonizacoes %>
+      <%= hidden_field_tag :harmonizacao, params[:harmonizacao] %>
+
+      <div>
+        <%= form.label :nome, "Nome completo", class: "rotulo" %>
+        <%= form.text_field :nome, class: class_names("campo mt-3", "campo--erro" => @reserva.errors[:nome].any?),
+              autocomplete: "name", required: true,
+              "aria-invalid": @reserva.errors[:nome].any?.presence %>
+        <%= render "reservations/erro_do_campo", reserva: @reserva, campo: :nome %>
+      </div>
+
+      <div class="grid gap-8 sm:grid-cols-2">
+        <div>
+          <%= form.label :email, "E-mail", class: "rotulo" %>
+          <%= form.email_field :email, class: class_names("campo mt-3", "campo--erro" => @reserva.errors[:email].any?),
+                autocomplete: "email", placeholder: "voce@email.com",
+                "aria-describedby": "ajuda-email",
+                "aria-invalid": @reserva.errors[:email].any?.presence %>
+          <%= render "reservations/erro_do_campo", reserva: @reserva, campo: :email %>
+          <p id="ajuda-email" class="mt-2 text-legenda text-cinza-texto">
+            Opcional. Fica no registro da casa, caso precisemos te achar.
+          </p>
+        </div>
+
+        <div>
+          <%= form.label :telefone, "Telefone / WhatsApp", class: "rotulo" %>
+          <%= form.telephone_field :telefone, class: class_names("campo mt-3", "campo--erro" => @reserva.errors[:telefone].any?),
+                autocomplete: "tel", inputmode: "tel", placeholder: "(11) 90000-0000", required: true,
+                "aria-describedby": "ajuda-telefone",
+                "aria-invalid": @reserva.errors[:telefone].any?.presence %>
+          <%= render "reservations/erro_do_campo", reserva: @reserva, campo: :telefone %>
+          <p id="ajuda-telefone" class="mt-2 text-legenda text-cinza-texto">
+            É por onde a casa avisa qualquer mudança.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :restricoes, "Restrições alimentares ou alergias", class: "rotulo" %>
+        <%= form.text_area :restricoes, rows: 3, class: "campo mt-3 resize-y",
+              "aria-describedby": "ajuda-restricoes" %>
+        <p id="ajuda-restricoes" class="mt-2 text-legenda text-cinza-texto">
+          O menu é único, mas adaptamos as etapas quando possível.
+        </p>
+      </div>
+
+      <div>
+        <%= form.label :ocasiao, "Ocasião especial", class: "rotulo" %>
+        <%= form.select :ocasiao, Reservation::OCASIOES, {}, class: "campo mt-3" %>
+      </div>
+
+      <div>
+        <label class="flex cursor-pointer items-start gap-3 text-legenda text-cinza-texto">
+          <%= form.check_box :politica, class: "caixa mt-0.5", required: true %>
+          <span>
+            Li e aceito a política de cancelamento: até 24h antes do horário reservado, pelo WhatsApp.
+          </span>
+        </label>
+        <%= render "reservations/erro_do_campo", reserva: @reserva, campo: :politica %>
+      </div>
+
+      <div class="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
+        <%= link_to "← Voltar", reservas_harmonizacao_path(data: @data, turno: @turno, pessoas: @pessoas.positive? ? @pessoas : nil, harmonizacao: params[:harmonizacao], harmonizacoes: @harmonizacoes),
+              class: "botao botao--secundario w-full text-center sm:w-auto" %>
+        <%= form.submit "Confirmar reserva", class: "botao botao--primario w-full sm:w-auto" %>
+      </div>
+
+      <p class="text-[12px] text-cinza-texto sm:text-right">
+        Não há pagamento pelo site. A conta é fechada no restaurante.
+      </p>
+    <% end %>
+
+    <%= render "reservations/resumo", com_barra_mobile: false %>
+  </div>
+</main>
+
+<%= render "reservations/rodape_minimo" %>

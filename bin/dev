@@ -1,2 +1,15 @@
 #!/usr/bin/env ruby.exe
-exec "./bin/rails", "server", *ARGV
+
+# Sobe o servidor junto com o watcher do Tailwind, para que mudanças em
+# app/assets/tailwind/application.css recompilem o CSS sem rebuild manual.
+watcher = spawn("ruby", "bin/rails", "tailwindcss:watch")
+
+begin
+  system("ruby", "bin/rails", "server", *ARGV)
+ensure
+  begin
+    Process.kill("KILL", watcher)
+  rescue StandardError
+    nil
+  end
+end

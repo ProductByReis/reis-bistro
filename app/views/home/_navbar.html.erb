@@ -1,0 +1,71 @@
+<header
+  data-controller="navbar"
+  class="fixed inset-x-0 top-0 z-50 h-[88px] transition-colors duration-300"
+>
+  <div class="wrap h-full flex items-center justify-between xl:grid xl:grid-cols-[20%_55%_25%]">
+    <%= link_to root_path, class: "shrink-0", "aria-label": "Reis Bistrô, página inicial" do %>
+      <span class="block font-display text-2xl leading-none">Reis Bistrô</span>
+      <span class="mt-1 block text-[11px] uppercase tracking-[0.28em] text-latao">Jundiaí</span>
+    <% end %>
+
+    <nav class="hidden xl:flex items-center justify-center gap-10 text-legenda" aria-label="Navegação principal">
+      <% navegacao_principal.each do |item| %>
+        <a href="<%= item[:ancora] %>" class="text-creme/80 hover:text-creme transition-colors"><%= item[:rotulo] %></a>
+      <% end %>
+    </nav>
+
+    <div class="hidden xl:flex justify-end">
+      <%= link_to "Reservar", reservas_path, class: "botao botao--primario min-h-11 px-7" %>
+    </div>
+
+    <button
+      type="button"
+      data-navbar-target="botaoMenu"
+      data-action="navbar#alternarMenu"
+      aria-expanded="false"
+      aria-controls="menu-mobile"
+      class="xl:hidden -mr-2 flex size-11 items-center justify-center"
+    >
+      <span class="sr-only">Abrir menu</span>
+      <span aria-hidden="true" class="relative block h-3 w-6">
+        <span class="absolute inset-x-0 top-0 h-px bg-creme"></span>
+        <span class="absolute inset-x-0 bottom-0 h-px bg-creme"></span>
+      </span>
+    </button>
+  </div>
+
+  <div
+    id="menu-mobile"
+    data-navbar-target="menu"
+    class="hidden fixed inset-0 z-50 bg-carvao xl:hidden"
+  >
+    <div class="wrap flex h-[88px] items-center justify-end">
+      <button
+        type="button"
+        data-action="navbar#alternarMenu"
+        class="-mr-2 flex size-11 items-center justify-center text-2xl"
+      >
+        <span class="sr-only">Fechar menu</span>
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <nav class="wrap mt-8 flex flex-col gap-8" aria-label="Navegação principal">
+      <% navegacao_principal.each do |item| %>
+        <a
+          href="<%= item[:ancora] %>"
+          data-action="navbar#fecharMenu"
+          class="font-display text-h3"
+        ><%= item[:rotulo] %></a>
+      <% end %>
+      <%= link_to "Reservar mesa", reservas_path, class: "botao botao--primario mt-4" %>
+    </nav>
+  </div>
+</header>
+
+<div
+  data-navbar-target="barra"
+  class="fixed inset-x-0 bottom-0 z-40 translate-y-full transition-transform duration-300 xl:hidden"
+>
+  <%= link_to "Reservar mesa", reservas_path, class: "botao botao--primario w-full rounded-none min-h-16" %>
+</div>

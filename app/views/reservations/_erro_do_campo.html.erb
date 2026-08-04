@@ -1,0 +1,8 @@
+<% mensagem = reserva.errors[campo].first %>
+
+<% if mensagem %>
+  <p class="mt-2 flex gap-2 text-legenda text-tijolo">
+    <span aria-hidden="true">⚠</span>
+    <span><%= reserva.errors.full_message(campo, mensagem) %></span>
+  </p>
+<% end %>

@@ -1,0 +1,117 @@
+<% mes_anterior = @referencia.prev_month %>
+<% mes_seguinte = @referencia.next_month %>
+<% pode_voltar = mes_anterior >= Date.current.beginning_of_month %>
+<% pode_avancar = mes_seguinte <= Reservation.ultimo_dia_reservavel.beginning_of_month %>
+<% pessoas_escolhidas = @pessoas.positive? ? @pessoas : nil %>
+
+<div class="flex items-center justify-between">
+  <h2 class="font-display text-h3 first-letter:uppercase"><%= nome_do_mes(@referencia) %></h2>
+
+  <div class="flex gap-1">
+    <% if pode_voltar %>
+      <%= link_to "‹", reservas_path(mes: mes_anterior, data: @data, turno: @turno, pessoas: pessoas_escolhidas),
+            class: "flex size-11 items-center justify-center border border-latao/40 hover:bg-latao/12 transition-colors",
+            "aria-label": "Mês anterior" %>
+    <% else %>
+      <span class="flex size-11 items-center justify-center border border-latao/15 text-cinza-texto/40" aria-hidden="true">‹</span>
+    <% end %>
+
+    <% if pode_avancar %>
+      <%= link_to "›", reservas_path(mes: mes_seguinte, data: @data, turno: @turno, pessoas: pessoas_escolhidas),
+            class: "flex size-11 items-center justify-center border border-latao/40 hover:bg-latao/12 transition-colors",
+            "aria-label": "Mês seguinte" %>
+    <% else %>
+      <span class="flex size-11 items-center justify-center border border-latao/15 text-cinza-texto/40" aria-hidden="true">›</span>
+    <% end %>
+  </div>
+</div>
+
+<% if @estado == "carregando" %>
+  <div class="mt-6 grid grid-cols-7 gap-1" aria-hidden="true">
+    <% 35.times do %>
+      <div class="skeleton aspect-square min-h-11"></div>
+    <% end %>
+  </div>
+  <p class="sr-only" role="status">Carregando disponibilidade.</p>
+
+<% elsif @estado == "vazio" %>
+  <div class="mt-6 border border-latao/25 p-10 text-center">
+    <p class="text-corpo">
+      Não há mesas disponíveis em <span class="first-letter:uppercase"><%= mes_sozinho(@referencia) %></span>.
+    </p>
+    <p class="mt-3 text-legenda text-cinza-texto">
+      Tente o mês seguinte ou entre na lista de espera pelo
+      <a href="<%= ReservationsHelper::WHATSAPP %>" target="_blank" rel="noopener" class="text-latao underline underline-offset-4">WhatsApp</a>.
+    </p>
+  </div>
+
+<% else %>
+  <%# Escolher a data recarrega o passo 1 para que as mesas restantes de cada
+      turno sejam recalculadas. Funciona sem JavaScript; a fase de backend troca
+      isso por um Turbo Frame. %>
+  <form action="<%= reservas_path %>" method="get">
+    <input type="hidden" name="mes" value="<%= @referencia.iso8601 %>">
+    <input type="hidden" name="turno" value="<%= @turno %>">
+    <input type="hidden" name="pessoas" value="<%= pessoas_escolhidas %>">
+
+    <table class="mt-6 w-full table-fixed border-separate border-spacing-1">
+      <caption class="sr-only">
+        Datas disponíveis em <%= nome_do_mes(@referencia) %>. Fechamos de segunda a quarta.
+      </caption>
+      <thead>
+        <tr>
+          <% cabecalho_da_semana.each do |inicial, nome| %>
+            <th scope="col" class="pb-2 text-[12px] font-normal text-cinza-texto">
+              <span aria-hidden="true"><%= inicial %></span>
+              <span class="sr-only"><%= nome %></span>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% semanas_do_mes(@referencia).each do |semana| %>
+          <tr>
+            <% semana.each do |dia| %>
+              <td>
+                <% if dia.nil? %>
+                  <span class="block aspect-square min-h-11" aria-hidden="true"></span>
+                <% else %>
+                  <% situacao = @disponibilidade.situacao(dia) %>
+                  <% if dia_selecionavel?(situacao) %>
+                    <button type="submit" name="data" value="<%= dia.iso8601 %>"
+                            class="<%= classe_do_dia(situacao, selecionado: @data == dia) %>"
+                            <%= 'aria-current="date"'.html_safe if @data == dia %>>
+                      <span aria-hidden="true"><%= dia.day %></span>
+                      <span class="sr-only">
+                        <%= data_por_extenso(dia) %><%= ", últimas mesas" if situacao == :ultimas %>
+                      </span>
+                    </button>
+                  <% else %>
+                    <span class="<%= classe_do_dia(situacao) %>" aria-disabled="true">
+                      <span aria-hidden="true"><%= dia.day %></span>
+                      <span class="sr-only">
+                        <%= data_por_extenso(dia) %>,
+                        <%= situacao == :esgotado ? "esgotado" : "fechado" %>
+                      </span>
+                    </span>
+                  <% end %>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </form>
+
+  <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[12px] text-cinza-texto">
+    <li class="flex items-center gap-2">
+      <span class="size-3 border border-latao/40" aria-hidden="true"></span> Disponível
+    </li>
+    <li class="flex items-center gap-2">
+      <span class="size-1.5 rounded-full bg-cobre" aria-hidden="true"></span> Últimas mesas
+    </li>
+    <li class="line-through">Esgotado</li>
+    <li>Fechamos de segunda a quarta</li>
+  </ul>
+<% end %>

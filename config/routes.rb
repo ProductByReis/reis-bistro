@@ -9,6 +9,17 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  # Fluxo de reserva. Os três primeiros passos carregam as escolhas pela query
+  # string; só o último grava, no POST.
+  get "reservas" => "reservations#new", as: :reservas
+  post "reservas" => "reservations#create"
+  get "reservas/harmonizacao" => "reservations#harmonizacao", as: :reservas_harmonizacao
+  get "reservas/dados" => "reservations#dados", as: :reservas_dados
+
+  # O token é longo de propósito: o código curto que o cliente lê na recepção
+  # seria adivinhável por tentativa e exporia dados de outras reservas.
+  get "reservas/confirmada/:token" => "reservations#confirmada", as: :reservas_confirmada
+
   # Defines the root path route ("/")
   root "home#index"
 end

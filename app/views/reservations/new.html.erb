@@ -1,0 +1,89 @@
+<%= render "reservations/navbar_reduzida" %>
+
+<main id="conteudo" class="wrap max-w-[1120px] pb-32 pt-12 xl:pb-24 xl:pt-16">
+  <%= render "reservations/progresso", atual_passo: 1 %>
+
+  <h1 class="mt-8 font-display text-h2">Quando você vem?</h1>
+  <p class="mt-4 max-w-[52ch] text-corpo text-cinza-texto">
+    Servimos de quinta a domingo, em dois turnos. A experiência dura cerca de 2h30.
+  </p>
+
+  <% if @reserva&.errors&.any? %>
+    <div class="faixa-erro mt-8" role="alert">
+      <% @reserva.errors.full_messages.each do |mensagem| %>
+        <p><%= mensagem %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="mt-12 grid gap-12 xl:grid-cols-[7fr_4fr] xl:gap-16">
+    <div class="space-y-14">
+      <section aria-labelledby="titulo-calendario">
+        <h2 class="sr-only" id="titulo-calendario">Data da reserva</h2>
+        <%= render "reservations/calendario" %>
+      </section>
+
+      <form action="<%= reservas_harmonizacao_path %>" method="get" class="space-y-14">
+        <input type="hidden" name="data" value="<%= @data %>">
+
+        <fieldset>
+          <legend class="rotulo">Horário</legend>
+          <p class="mt-2 text-legenda text-cinza-texto">
+            <%= @data ? "Disponibilidade para #{data_por_extenso(@data)}." : "Escolha uma data acima para ver os turnos." %>
+          </p>
+
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            <% Reservation::TURNOS.each do |turno| %>
+              <% vagas = rotulo_do_turno(@disponibilidade, @data, turno) %>
+              <label class="escolha <%= "escolha--indisponivel" if vagas[:indisponivel] %>">
+                <input type="radio" name="turno" value="<%= turno %>" class="sr-only" required
+                       <%= "checked" if @turno == turno %> <%= "disabled" if vagas[:indisponivel] %>>
+                <span class="block font-display text-[2rem] leading-none"><%= turno %></span>
+                <span class="mt-2 block text-legenda <%= vagas[:classe] %>"><%= vagas[:texto] %></span>
+              </label>
+            <% end %>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="rotulo">Quantas pessoas</legend>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <% 1.upto(Reservation::MAXIMO_DE_PESSOAS) do |quantidade| %>
+              <label class="escolha escolha--numero min-w-[88px] text-center">
+                <input type="radio" name="pessoas" value="<%= quantidade %>" class="sr-only" required
+                       <%= "checked" if @pessoas == quantidade %>>
+                <span class="block font-display text-[1.5rem]"><%= quantidade %></span>
+                <span class="escolha__nota mt-1 block text-[12px] text-cinza-texto">
+                  <%= quantidade == 1 ? "pessoa" : "pessoas" %>
+                </span>
+              </label>
+            <% end %>
+          </div>
+
+          <p class="mt-4 text-legenda text-cinza-texto">
+            Mesas de até quatro pessoas. Para grupos maiores, fale com a gente pelo WhatsApp
+            <a href="<%= ReservationsHelper::WHATSAPP %>" target="_blank" rel="noopener" class="text-latao underline underline-offset-4"><%= ReservationsHelper::TELEFONE %></a>.
+          </p>
+        </fieldset>
+
+        <div>
+          <div class="flex xl:justify-end">
+            <% if @data %>
+              <button type="submit" class="botao botao--primario botao--travado w-full sm:w-auto">Continuar</button>
+            <% else %>
+              <button type="submit" class="botao botao--primario w-full sm:w-auto" disabled>Continuar</button>
+            <% end %>
+          </div>
+          <p class="mt-4 text-[12px] text-cinza-texto xl:text-right">
+            Nada é cobrado agora. Não há pagamento pelo site.
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <%= render "reservations/resumo" %>
+  </div>
+</main>
+
+<%= render "reservations/rodape_minimo" %>

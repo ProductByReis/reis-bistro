@@ -1,0 +1,407 @@
+@import "tailwindcss";
+
+/*
+ * Design System do Reis Bistrô — fonte única de verdade dos tokens.
+ * Referência de uso das cores e da escala: ux.md, item 3.
+ */
+
+/*
+ * `static` mantém todos os tokens no CSS final mesmo antes de existir HTML
+ * que os use. Sem isso o Tailwind 4 remove os não referenciados, e o bloco
+ * responsivo mais abaixo passa a apontar para variáveis inexistentes.
+ */
+@theme static {
+  /* Cores */
+  --color-carvao: #1a1410;
+  --color-carvao-claro: #241c16;
+  --color-creme: #f3ebe0;
+  --color-latao: #e0b87a;
+  --color-cobre: #c47a4a;
+  --color-cinza-texto: #a79c8c;
+  --color-tijolo: #e0705a;
+
+  /* Tipografia */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Outfit", "Segoe UI", sans-serif;
+
+  --text-h1: 2.5rem;
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.2;
+  --text-corpo: 1rem;
+  --text-corpo--line-height: 1.6;
+  --text-legenda: 0.8125rem;
+  --text-legenda--line-height: 1.5;
+  --text-rotulo: 0.75rem;
+  --text-rotulo--line-height: 1.4;
+  --text-rotulo--letter-spacing: 0.18em;
+
+  /* Ritmo vertical entre seções */
+  --spacing-secao: 5.5rem;
+  --spacing-secao-lg: 10rem;
+
+  /* Largura máxima de conteúdo */
+  --container-conteudo: 80rem;
+  --container-leitura: 34rem;
+
+  /* Movimento */
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * A escala tipográfica é mobile-first: os valores acima são os do mobile
+ * e crescem no desktop, conforme a tabela do ux.md, item 3.
+ */
+@media (width >= 80rem) {
+  :root {
+    --text-h1: 4.5rem;
+    --text-h2: 3rem;
+    --text-h3: 1.75rem;
+    --text-corpo: 1.125rem;
+    --text-legenda: 0.875rem;
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-carvao);
+    color: var(--color-creme);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  /* Outfit não possui itálico: qualquer texto em itálico usa a display. */
+  em,
+  i {
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-latao);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Caixa de conteúdo: 1280px no máximo, margem 24px no mobile e 80px no desktop. */
+  .wrap {
+    width: 100%;
+    max-width: var(--container-conteudo);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (width >= 80rem) {
+    .wrap {
+      padding-inline: 5rem;
+    }
+  }
+
+  /*
+   * Navbar depois de 80px de rolagem. Fica aqui, e não como utilitários
+   * alternados pelo JS, porque o Tailwind não escaneia arquivos JavaScript.
+   */
+  .navbar--solida {
+    background-color: color-mix(in srgb, var(--color-carvao) 95%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-latao) 18%, transparent);
+  }
+
+  /*
+   * Entrada das seções. O estado inicial só é aplicado quando o JS está ativo
+   * (a raiz recebe .js), para a página continuar legível sem JavaScript.
+   */
+  .js .revelar {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 400ms var(--ease-suave),
+      transform 400ms var(--ease-suave);
+  }
+
+  .js .revelar.revelado {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Rótulo curto em caixa alta — ex.: "O CHEF", "A CERVEJARIA". */
+  .rotulo {
+    font-size: var(--text-rotulo);
+    letter-spacing: var(--text-rotulo--letter-spacing);
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--color-latao);
+  }
+
+  /* Filete divisor do ux.md, item 3. */
+  .filete {
+    height: 1px;
+    background-color: color-mix(in srgb, var(--color-latao) 24%, transparent);
+    border: 0;
+  }
+
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.25rem;
+    padding: 0 2.5rem;
+    font-size: var(--text-legenda);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition:
+      transform 200ms var(--ease-suave),
+      background-color 200ms var(--ease-suave);
+  }
+
+  .botao--primario {
+    background-color: var(--color-latao);
+    color: var(--color-carvao);
+  }
+
+  .botao--primario:hover {
+    background-color: color-mix(in srgb, var(--color-latao) 88%, black);
+    transform: translateY(-2px);
+  }
+
+  .botao--secundario {
+    border: 1px solid color-mix(in srgb, var(--color-creme) 40%, transparent);
+    color: var(--color-creme);
+  }
+
+  .botao--secundario:hover {
+    border-color: var(--color-creme);
+    transform: translateY(-2px);
+  }
+
+  .botao:disabled,
+  .botao[aria-disabled="true"] {
+    opacity: 0.4;
+    pointer-events: none;
+    transform: none;
+  }
+
+  /* Avanço travado até as escolhas do passo estarem feitas, sem JavaScript.
+     Os radios também têm `required`, que é o que realmente barra o envio. */
+  .botao--travado {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  form:has(input[name="turno"]:checked):has(input[name="pessoas"]:checked) .botao--travado,
+  form:has(input[name="harmonizacao"]:checked) .botao--travado {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Telas de reserva. Especificação: ux.md, item 6.
+   * A seleção é feita por <input type="radio"> real, escondido, e o estado
+   * visual vem do :has(:checked) — sem JavaScript.
+   * ------------------------------------------------------------------- */
+
+  /* Célula de dia no calendário. */
+  .dia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    min-height: 3rem;
+    border: 1px solid color-mix(in srgb, var(--color-latao) 40%, transparent);
+    font-size: var(--text-legenda);
+    cursor: pointer;
+    transition: background-color 150ms var(--ease-suave);
+  }
+
+  .dia:hover {
+    background-color: color-mix(in srgb, var(--color-latao) 12%, transparent);
+  }
+
+  .dia--selecionado {
+    background-color: var(--color-latao);
+    color: var(--color-carvao);
+    font-weight: 500;
+  }
+
+  .dia--ultimas {
+    position: relative;
+  }
+
+  .dia--selecionado.dia--ultimas::after {
+    background-color: var(--color-carvao);
+  }
+
+  .dia--ultimas::after {
+    content: "";
+    position: absolute;
+    bottom: 0.375rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--color-cobre);
+  }
+
+  .dia--esgotado,
+  .dia--fechado {
+    border-color: transparent;
+    color: var(--color-cinza-texto);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .dia--esgotado {
+    text-decoration: line-through;
+  }
+
+  .dia--fechado {
+    opacity: 0.4;
+  }
+
+  /* Card selecionável genérico: turno, número de pessoas, harmonização. */
+  .escolha {
+    display: block;
+    border: 1px solid color-mix(in srgb, var(--color-creme) 20%, transparent);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition:
+      border-color 150ms var(--ease-suave),
+      background-color 150ms var(--ease-suave);
+  }
+
+  .escolha:hover {
+    border-color: color-mix(in srgb, var(--color-creme) 45%, transparent);
+  }
+
+  /* O card de upsell tem um seletor de quantidade dentro, já pré-marcado, então
+     seu estado depende só do radio principal — daí o :not() na regra geral. */
+  .escolha:not(.escolha--upsell, .escolha--numero):has(input:checked),
+  .escolha--upsell:has(input[name="harmonizacao"]:checked) {
+    border-color: var(--color-latao);
+    background-color: color-mix(in srgb, var(--color-latao) 10%, transparent);
+  }
+
+  /* Seletor de quantidade: o selecionado é preenchido, não apenas contornado. */
+  .escolha--numero:has(input:checked) {
+    background-color: var(--color-latao);
+    border-color: var(--color-latao);
+    color: var(--color-carvao);
+  }
+
+  .escolha--numero:has(input:checked) .escolha__nota {
+    color: color-mix(in srgb, var(--color-carvao) 70%, transparent);
+  }
+
+  /* O radio real está escondido, então o foco de teclado é desenhado no card. */
+  .escolha:has(input:focus-visible) {
+    outline: 2px solid var(--color-latao);
+    outline-offset: 3px;
+  }
+
+  .escolha--indisponivel {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  /* Campo de formulário. */
+  .campo {
+    width: 100%;
+    background-color: var(--color-carvao-claro);
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-creme) 25%, transparent);
+    padding: 0.875rem 1rem;
+    font-size: var(--text-corpo);
+    color: var(--color-creme);
+  }
+
+  .campo::placeholder {
+    color: var(--color-cinza-texto);
+  }
+
+  .campo:focus {
+    outline: 0;
+    border-bottom: 2px solid var(--color-latao);
+    padding-bottom: calc(0.875rem - 1px);
+  }
+
+  .campo--erro {
+    border-bottom-color: var(--color-tijolo);
+  }
+
+  /* Caixa de seleção: o controle nativo ignora o tema escuro. */
+  .caixa {
+    appearance: none;
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--color-creme) 40%, transparent);
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .caixa:checked {
+    border-color: var(--color-latao);
+    background-color: var(--color-latao);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.2l2.6 2.6L10 3.4' fill='none' stroke='%231a1410' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0.8125rem;
+  }
+
+  /* Faixa de aviso no topo de um passo. */
+  .faixa-erro {
+    border: 1px solid color-mix(in srgb, var(--color-tijolo) 50%, transparent);
+    background-color: color-mix(in srgb, var(--color-tijolo) 12%, transparent);
+    color: var(--color-tijolo);
+    padding: 1rem 1.25rem;
+    font-size: var(--text-legenda);
+  }
+
+  /* Placeholder de carregamento, preservando a altura do conteúdo real. */
+  .skeleton {
+    background-color: var(--color-carvao-claro);
+    animation: pulsar 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes pulsar {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botao:hover {
+    transform: none;
+  }
+
+  .js .revelar,
+  .js .revelar.revelado {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+}

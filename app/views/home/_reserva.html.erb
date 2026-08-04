@@ -1,0 +1,29 @@
+<section class="relative min-h-[520px] flex items-center bg-carvao-claro" aria-labelledby="reserva-titulo">
+  <%= image_tag "reserva.webp",
+        alt: "Salão do restaurante cheio à noite, visto de longe",
+        loading: "lazy",
+        class: "absolute inset-0 size-full object-cover" %>
+
+  <div class="absolute inset-0 bg-carvao/70"></div>
+
+  <div class="relative wrap py-secao text-center">
+    <div class="mx-auto max-w-2xl revelar" data-controller="revelar">
+      <h2 id="reserva-titulo" class="font-display text-h2">
+        Quatro noites por semana. Doze mesas.
+      </h2>
+
+      <p class="mt-6 text-corpo text-creme/80">
+        As mesas de sexta e sábado costumam fechar com antecedência.
+      </p>
+
+      <div class="mt-10">
+        <%= link_to "Reservar mesa", reservas_path, class: "botao botao--primario" %>
+      </div>
+
+      <p class="mt-5 text-legenda text-cinza-texto">
+        Ou fale com a gente pelo WhatsApp:
+        <a href="<%= ReservationsHelper::WHATSAPP %>" target="_blank" rel="noopener" class="text-latao underline underline-offset-4"><%= ReservationsHelper::TELEFONE %></a>
+      </p>
+    </div>
+  </div>
+</section>

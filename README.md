@@ -1,24 +1,35 @@
-# README
+# Reis Bistrô
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+App de reserva de mesas para um restaurante fictício — projeto de estudo (vibecoding) em Ruby on Rails.
 
-Things you may want to cover:
+## O que tem
 
-* Ruby version
+- Landing page (Tailwind + Hotwire)
+- Fluxo de reserva em 4 passos (data/turno/pessoas → harmonização → dados → confirmação)
+- Disponibilidade real no SQLite (12 mesas por turno, corte de 2 horas)
+- Trava de overbooking no banco
 
-* System dependencies
+## Aviso
 
-* Configuration
+Contato, endereço e reservas de seed são **fictícios**. Não use este repositório como site real sem política de privacidade, painel da casa e troca dos dados de demonstração.
 
-* Database creation
+## Rodar local
 
-* Database initialization
+```bash
+bundle install
+bin/rails db:prepare
+bin/rails db:seed
+bin/dev
+```
 
-* How to run the test suite
+Abra http://127.0.0.1:3000
 
-* Services (job queues, cache servers, search engines, etc.)
+## Testes
 
-* Deployment instructions
+```bash
+bin/rails test
+```
 
-* ...
+## Stack
+
+Ruby on Rails 8 · SQLite · Tailwind CSS · Stimulus · Importmap

@@ -1,0 +1,32 @@
+<section class="relative h-[90vh] xl:h-screen min-h-[560px] bg-carvao-claro" aria-labelledby="hero-titulo">
+  <%= image_tag "hero.webp",
+        alt: "Disco de massa de pizza entrando em um forno a lenha aceso",
+        loading: "eager",
+        fetchpriority: "high",
+        class: "absolute inset-0 size-full object-cover" %>
+
+  <div class="absolute inset-0 bg-gradient-to-b from-carvao/25 via-carvao/50 to-carvao/85"></div>
+
+  <div class="relative h-full wrap flex items-end pb-20 xl:pb-28">
+    <div class="xl:w-[55%]">
+      <p class="rotulo">Duas estrelas Michelin · Jundiaí, SP</p>
+
+      <h1 id="hero-titulo" class="mt-6 font-display text-h1">
+        A pizza como ela nunca foi servida.
+      </h1>
+
+      <p class="mt-6 text-corpo text-creme/80 max-w-leitura">
+        Seis etapas de massa autoral, harmonizadas com a cerveja que fermenta na casa.
+        Doze mesas, quatro noites por semana.
+      </p>
+
+      <div class="mt-10">
+        <%= link_to "Reservar mesa", reservas_path, class: "botao botao--primario" %>
+      </div>
+
+      <p class="mt-5 text-legenda text-cinza-texto">
+        Quinta a domingo, das 18h à meia-noite
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,78 @@
+<% agenda = link_google_agenda(@reserva) %>
+
+<%= render "reservations/navbar_reduzida" %>
+
+<main id="conteudo" class="wrap max-w-[1120px] py-16 xl:py-24">
+  <div class="mx-auto max-w-[640px]">
+    <span class="block text-[1.5rem] text-latao" aria-hidden="true">✓</span>
+    <hr class="filete mt-4">
+
+    <h1 class="mt-8 font-display text-h2">Mesa reservada.</h1>
+
+    <p class="mt-4 text-corpo text-cinza-texto">
+      Guarde o código abaixo — é o que a recepção pede na chegada. Se precisar mudar algo,
+      fale com a gente pelo
+      <a href="<%= ReservationsHelper::WHATSAPP %>" target="_blank" rel="noopener" class="text-latao underline underline-offset-4">WhatsApp</a>.
+    </p>
+
+    <dl class="mt-12 divide-y divide-latao/20 border-y border-latao/20 text-corpo">
+      <div class="flex flex-wrap justify-between gap-x-6 gap-y-1 py-4">
+        <dt class="text-cinza-texto">Data e horário</dt>
+        <dd class="text-right first-letter:uppercase">
+          <%= data_por_extenso(@reserva.data) %>, <%= @reserva.turno %>
+        </dd>
+      </div>
+      <div class="flex flex-wrap justify-between gap-x-6 gap-y-1 py-4">
+        <dt class="text-cinza-texto">Pessoas</dt>
+        <dd><%= pluralize(@reserva.pessoas, "pessoa") %></dd>
+      </div>
+      <div class="flex flex-wrap justify-between gap-x-6 gap-y-1 py-4">
+        <dt class="text-cinza-texto">Harmonização</dt>
+        <dd>
+          <%= @reserva.harmoniza? ? "Reis Beer para #{pluralize(@reserva.harmonizacoes, 'pessoa')}" : "Não incluída" %>
+        </dd>
+      </div>
+      <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
+        <dt class="text-cinza-texto">Total estimado</dt>
+        <dd class="font-display text-[1.5rem]"><%= em_reais(@reserva.valor_total) %></dd>
+      </div>
+      <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
+        <dt class="text-cinza-texto">Código da reserva</dt>
+        <dd class="font-display text-[1.5rem] tracking-[0.08em]"><%= @reserva.codigo %></dd>
+      </div>
+    </dl>
+
+    <section class="mt-12" aria-labelledby="como-chegar">
+      <h2 class="rotulo" id="como-chegar">Como chegar</h2>
+      <p class="mt-4 text-corpo"><%= ReservationsHelper::ENDERECO %></p>
+      <a href="https://www.google.com/maps/search/?api=1&query=<%= CGI.escape(ReservationsHelper::ENDERECO) %>"
+         target="_blank" rel="noopener"
+         class="mt-3 inline-block text-legenda text-latao underline underline-offset-4">
+        Abrir no mapa
+      </a>
+    </section>
+
+    <ul class="mt-12 space-y-2 text-legenda text-cinza-texto">
+      <li>Chegue com 10 minutos de antecedência — o menu começa no horário.</li>
+      <li>A experiência dura cerca de 2h30.</li>
+      <li>Cancelamento sem custo até 24h antes.</li>
+    </ul>
+
+    <div class="mt-12 flex flex-wrap gap-4">
+      <a href="<%= ReservationsHelper::WHATSAPP %>?text=<%= CGI.escape("Olá! Minha reserva é #{@reserva.codigo}, para #{@reserva.pessoas} no dia #{@reserva.data.strftime('%d/%m')} às #{@reserva.turno}.") %>"
+         target="_blank" rel="noopener" class="botao botao--secundario">
+        Enviar no WhatsApp
+      </a>
+      <% if agenda %>
+        <a href="<%= agenda %>" target="_blank" rel="noopener" class="botao botao--secundario">
+          Adicionar à agenda
+        </a>
+      <% end %>
+    </div>
+
+    <%= link_to "Voltar ao site", root_path,
+          class: "mt-12 inline-block text-legenda text-cinza-texto hover:text-creme transition-colors underline underline-offset-4" %>
+  </div>
+</main>
+
+<%= render "reservations/rodape_minimo" %>
