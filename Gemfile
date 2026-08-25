@@ -9,7 +9,7 @@ gem "turbo-rails", "2.0.23"
 gem "stimulus-rails", "1.3.4"
 gem "tailwindcss-rails", "4.6.0"
 gem "solid_cache", "1.0.10"
-gem "solid_queue", "1.6.0"
+gem "solid_queue", "1.7.0"
 
 # Use Ruby default gems already present (avoid MSYS2 native rebuilds)
 gem "bigdecimal", "3.1.8"
