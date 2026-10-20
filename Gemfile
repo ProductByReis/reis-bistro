@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "8.1.3.1"
 gem "propshaft", "1.3.2"
-gem "sqlite3", "2.9.5"
+gem "sqlite3", "2.10.0"
 gem "webrick", "1.9.2"
 gem "importmap-rails", "2.2.3"
 gem "turbo-rails", "2.0.23"
